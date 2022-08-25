@@ -1,0 +1,3 @@
+-r fullstack/requirements.txt
+
+python-dotenv

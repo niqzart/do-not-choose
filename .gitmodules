@@ -1,0 +1,3 @@
+[submodule "fullstack/__lib__"]
+	path = fullstack/__lib__
+	url = https://github.com/niqzart/flask-fullstack.git
