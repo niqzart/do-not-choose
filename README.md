@@ -7,13 +7,17 @@ This is a learning project made to better understand python web frameworks and c
 ## Waves
 Each implementation will be done in waves and tagged along the way for easier navigation. Each wave requires implementing a part of the basic interface. *Wave will be described in full after any implementation reaches the previous wave*
 
-### W1
+### W1 (Base)
 - Basic Configuration
 - Simplest Endpoint(s)
 - X-Framework header for all requests
 - Error handlers (404, 500)
 
-### W2
+### W2 (Reglog)
+- Attach the common SQLAlchemy DB
+- Classic authorization services
+- One protected resource (`/home/`)
+- User session management
 
 ### W3
 
@@ -43,13 +47,15 @@ Each implementation will be done in waves and tagged along the way for easier na
 - Node.js
 
 ## Progress
-| codename | wave1 | wave2 | wave3 | wave4 | 
-|:--------:|:-----:|:-----:|:-----:|:-----:|
-|    F     |       |       |       |       |
-|    R     |       |       |       |       |
-|    X     |       |       |       |       |
-|    B     |       |       |       |       |
-|    P     |       |       |       |       |
+*Tags and dates per implementation per wave*
+
+| codename |       wave1       | wave2 | wave3 | wave4 | 
+|:--------:|:-----------------:|:-----:|:-----:|:-----:|
+|    F     |                   |       |       |       |
+|    R     |                   |       |       |       |
+|    X     | w1x [25 Aug 2022] |       |       |       |
+|    B     |                   |       |       |       |
+|    P     |                   |       |       |       |
 
 ## Server Setup
 TBA
