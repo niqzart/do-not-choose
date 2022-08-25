@@ -1,0 +1,14 @@
+# IDEs
+.idea/
+.vscode/
+
+# Python specific
+venv/
+__pycache__/
+.pytest_cache/
+
+# Project specific
+.archive/
+file/
+*.env
+*.db
