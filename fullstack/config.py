@@ -20,7 +20,7 @@ app.config["RESTX_INCLUDE_ALL_MODELS"] = True
 
 @app.errorhandler(NotFound)
 def on_not_found(_):
-    return app.return_error(404, "Not Found")
+    return {"message": "Not Found"}, 404
 
 
 @app.errorhandler(Exception)
