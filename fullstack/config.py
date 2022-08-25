@@ -1,7 +1,7 @@
 from sys import modules
 from traceback import format_tb
 
-from flask import request
+from flask import request, Response
 from werkzeug.exceptions import NotFound
 
 from __lib__.flask_fullstack import Flask
@@ -32,3 +32,10 @@ def on_any_exception(error: Exception):
     )
     print(error_text)
     return app.return_error(500, error_text if app.debug else "Error occurred, check the logs")
+
+
+@app.after_request
+def add_header(res: Response):
+    res.headers.add_header("X-Framework", "flask-fullstack")
+    res.headers.add_header("X-Framework-Codename", "X")
+    return res
