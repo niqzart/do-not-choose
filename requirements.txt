@@ -1,3 +1,8 @@
--r fullstack/requirements.txt
+# Common
+-r common/requirements.txt
 
-python-dotenv
+# Databases
+-r common/relational/requirements.txt
+
+# Frameworks
+-r fullstack/requirements.txt
