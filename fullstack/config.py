@@ -1,3 +1,4 @@
+from os import getenv
 from sys import modules
 from traceback import format_tb
 
@@ -5,11 +6,11 @@ from flask import request, Response
 from werkzeug.exceptions import NotFound
 
 from __lib__.flask_fullstack import Flask
-from __lib__.flask_fullstack.sqlalchemy import create_base, Sessionmaker, Session
-from common import db_meta, engine
+from common.relational import configure_sqlalchemy, build_sqlalchemy_database
 
-Base = create_base(db_meta)
-sessionmaker = Sessionmaker(bind=engine, class_=Session)
+db_url = getenv("DB_LINK", "sqlite:///app.db")
+db_meta, Base, sessionmaker = configure_sqlalchemy(db_url)
+db = build_sqlalchemy_database(db_url, db_meta, Base, sessionmaker)
 
 app: Flask = Flask(__name__)
 app.config["TESTING"] = "pytest" in modules.keys()
