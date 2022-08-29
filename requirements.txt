@@ -5,4 +5,5 @@
 -r common/relational/requirements.txt
 
 # Frameworks
+-r flask/requirements.txt
 -r fullstack/requirements.txt
