@@ -16,6 +16,7 @@ class UserBase(BaseModel):
 
 class User(UserBase):
     id: int
+    password: str
 
 
 class UserSessionInput(BaseModel):
@@ -51,9 +52,6 @@ class Database:
         raise NotImplementedError()
 
     def find_user_by_username(self, user_id: int) -> User | None:
-        raise NotImplementedError()
-
-    def check_password(self, user_id: int, password: str) -> bool | None:
         raise NotImplementedError()
 
     def create_user_session(self, user: User, user_session: UserSessionInput) -> UserSession:

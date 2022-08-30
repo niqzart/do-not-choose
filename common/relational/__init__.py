@@ -49,7 +49,7 @@ def build_sqlalchemy_database(db_url: str, *config) -> Database:
         __tablename__ = "users"
 
         id = Column(Integer, primary_key=True)
-        username = Column(String(100), nullable=False)
+        username = Column(String(100), nullable=False, index=True)
         password = Column(String(100), nullable=False)
 
     class UserSessionORM(Base):
@@ -88,13 +88,6 @@ def build_sqlalchemy_database(db_url: str, *config) -> Database:
         @from_orm(User)
         def find_user_by_username(self, username: str, session) -> UserORM | None:
             return session.get_first(select(UserORM).filter_by(username=username))
-
-        @sessionmaker.with_begin
-        def check_password(self, user_id: int, password: str, session) -> bool | None:
-            user: UserORM = session.get_first(select(UserORM).filter_by(id=user_id))
-            if user is None:
-                return None
-            return self.verify_hash(password, user.password)
 
         @sessionmaker.with_begin
         @from_orm(UserSession)
