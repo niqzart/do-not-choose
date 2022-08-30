@@ -4,11 +4,15 @@ from sys import modules
 from flask import Response, Flask
 from werkzeug.exceptions import NotFound, InternalServerError
 
+from jwt_config import configure_jwt
+
 app: Flask = Flask(__name__)
 app.config["TESTING"] = "pytest" in modules
 
 for secret_name in ("SECRET_KEY", "SECURITY_PASSWORD_SALT", "JWT_SECRET_KEY"):
     app.config[secret_name] = getenv(secret_name, "hope it's local")
+
+jwt = configure_jwt(app)
 
 
 @app.errorhandler(NotFound)

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from functools import wraps
 
-from flask import request
+from flask import request, Response, jsonify
 
 
 def parse_arguments(*keys: str) -> dict[str, str | None]:
@@ -36,3 +36,9 @@ def argument_parser(*keys: str, require_all: bool = False, strings_only: bool = 
         return argument_parser_inner
 
     return argument_parser_wrapper
+
+
+def error_response(code: int, *args, **kwargs) -> Response:
+    response = jsonify(*args, **kwargs)
+    response.status_code = code
+    return response

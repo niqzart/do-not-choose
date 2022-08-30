@@ -1,12 +1,25 @@
 from __future__ import annotations
 
-from flask import Blueprint
+from flask import Blueprint, jsonify
+from flask_jwt_extended import (
+    create_access_token,
+    set_access_cookies,
+)
 
-from common import db
-from common.interface import User
+from common import db, User
 from utils import argument_parser
 
 controller = Blueprint("reglog", __name__, url_prefix="/")
+
+
+def home_response(user: User):
+    return {"message": "Success", "id": user.id}
+
+
+def authorized_response(user: User):
+    response = jsonify(home_response(user))
+    set_access_cookies(response, create_access_token(identity=user.id))
+    return response
 
 
 @controller.route("/sign-up/", methods=("POST",))
@@ -16,7 +29,7 @@ def sign_up(username: str, password: str):
         return {"message": "Username already taken"}
 
     user: User = db.create_user(username, password)
-    return {"message": "Success", "id": user.id}
+    return authorized_response(user)
 
 
 @controller.route("/sign-in/", methods=("POST",))
@@ -29,4 +42,4 @@ def sign_in(username: str, password: str):
     if not db.verify_hash(password, user.password):
         return {"message": "Wrong password"}
 
-    return {"message": "Success"}
+    return authorized_response(user)
