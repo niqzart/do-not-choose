@@ -1,15 +1,25 @@
 from __future__ import annotations
 
 from sqlalchemy import (
-    create_engine, select, MetaData, Column, ForeignKey,
-    Integer, String, Text
+    create_engine,
+    select,
+    MetaData,
+    Column,
+    ForeignKey,
+    Integer,
+    String,
+    Text,
 )
 from sqlalchemy.orm import relationship
 
 from .sqlalchemy_ext import Sessionmaker, Session, create_base
 from ..interface import (
-    Database, from_orm, list_from_orm,
-    UserInput, User, UserSession, UserSessionInput,
+    Database,
+    from_orm,
+    list_from_orm,
+    User,
+    UserSession,
+    UserSessionInput,
 )
 
 
@@ -58,13 +68,20 @@ def build_sqlalchemy_database(db_url: str, *config) -> Database:
     class SQLAlchemyDatabase(Database):
         @sessionmaker.with_begin
         @from_orm(User)
-        def create_user(self, session, user: UserInput) -> UserORM:
-            return UserORM.create(session, **user.dict())
+        def _create_user(self, session, username: str, password: str) -> User:
+            return UserORM.create(session, username=username, password=password)
 
         @sessionmaker.with_begin
         @from_orm(User)
         def find_user(self, session, user_id: int) -> UserORM | None:
             return session.get_first(select(UserORM).filter_by(id=user_id))
+
+        @sessionmaker.with_begin
+        def check_password(self, session, user_id: int, password: str) -> bool | None:
+            user: UserORM = session.get_first(select(UserORM).filter_by(id=user_id))
+            if user is None:
+                return None
+            return self.verify_hash(password, user.password)
 
         @sessionmaker.with_begin
         @from_orm(UserSession)

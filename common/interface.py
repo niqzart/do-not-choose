@@ -3,6 +3,7 @@ from __future__ import annotations
 from functools import wraps
 from typing import Type, Callable
 
+from passlib.hash import pbkdf2_sha256
 from pydantic import BaseModel, constr
 
 
@@ -11,10 +12,6 @@ class UserBase(BaseModel):
 
     class Config:
         orm_mode = True
-
-
-class UserInput(UserBase):
-    password: constr(max_length=100)
 
 
 class User(UserBase):
@@ -33,10 +30,24 @@ class UserSession(UserSessionInput):
 
 
 class Database:
-    def create_user(self, user: UserInput) -> User:
+    @staticmethod
+    def generate_hash(password) -> str:
+        return pbkdf2_sha256.hash(password)
+
+    @staticmethod
+    def verify_hash(password, hashed) -> bool:
+        return pbkdf2_sha256.verify(password, hashed)
+
+    def _create_user(self, username: str, password: str) -> User:
         raise NotImplementedError()
 
+    def create_user(self, username: str, password: str) -> User:
+        return self._create_user(username, self.generate_hash(password))
+
     def find_user(self, user_id: int) -> User | None:
+        raise NotImplementedError()
+
+    def check_password(self, user_id: int, password: str) -> bool | None:
         raise NotImplementedError()
 
     def create_user_session(self, user: User, user_session: UserSessionInput) -> UserSession:
