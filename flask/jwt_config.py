@@ -3,13 +3,15 @@ from datetime import timedelta, datetime
 from flask import Flask, Response
 from flask_jwt_extended import (
     JWTManager,
-    get_jwt_identity,
     create_access_token,
     set_access_cookies,
     unset_jwt_cookies,
-    verify_jwt_in_request,
+    get_jwt_identity,
+    get_jwt,
 )
+from flask_jwt_extended.exceptions import JWTExtendedException
 
+from common import db
 from utils import error_response
 
 configuration_options = {
@@ -54,12 +56,18 @@ def configure_jwt(app: Flask = None):
     if auto_refresh is not None:
         @app.after_request
         def refresh_expiring_jwt(response: Response):
-            jwt_parts = verify_jwt_in_request(optional=True)
-            if jwt_parts is not None:
+            try:
+                jwt_payload = get_jwt()
                 target_timestamp = datetime.timestamp(datetime.utcnow() + auto_refresh)
-                if target_timestamp > jwt_parts[1]["exp"]:
+                if target_timestamp > jwt_payload["exp"]:
                     token = create_access_token(identity=get_jwt_identity())
                     set_access_cookies(response, token)
+            except (RuntimeError, JWTExtendedException):
+                pass
             return response
+
+    @jwt.token_in_blocklist_loader
+    def blacklist_check(_, jwt_payload: dict) -> bool:
+        return db.is_token_blocked(jwt_payload["jti"])
 
     return jwt

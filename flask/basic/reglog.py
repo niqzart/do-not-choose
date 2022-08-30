@@ -3,7 +3,11 @@ from __future__ import annotations
 from flask import Blueprint, jsonify
 from flask_jwt_extended import (
     create_access_token,
+    get_jwt_identity,
+    get_jwt,
+    jwt_required,
     set_access_cookies,
+    unset_jwt_cookies,
 )
 
 from common import db, User
@@ -43,3 +47,18 @@ def sign_in(username: str, password: str):
         return {"message": "Wrong password"}
 
     return authorized_response(user)
+
+
+@controller.route("/sing-out/", methods=("POST",))
+@jwt_required()
+def sign_out():
+    db.block_token(get_jwt()["jti"])
+    response = jsonify(message="Success")
+    unset_jwt_cookies(response)
+    return response
+
+
+@controller.route("/home/", methods=("GET",))
+@jwt_required()
+def home():
+    return home_response(db.find_user(get_jwt_identity()))
