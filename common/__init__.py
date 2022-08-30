@@ -2,7 +2,7 @@ from os import getenv
 
 from dotenv import load_dotenv
 
-from .interface import Database, User, UserSession, UserSessionInput
+from .interface import Database, User
 from .relational import build_sqlalchemy_database
 
 load_dotenv(".env")

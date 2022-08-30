@@ -43,6 +43,12 @@ class Database:
     def find_user_by_username(self, user_id: int) -> User | None:
         raise NotImplementedError()
 
+    def block_token(self, jti: str) -> None:
+        raise NotImplementedError()
+
+    def is_token_blocked(self, jti: str) -> bool:
+        raise NotImplementedError()
+
 
 def from_orm(model: Type[BaseModel]):
     def from_orm_wrapper(function) -> Callable[..., model | None]:

@@ -46,6 +46,12 @@ def build_sqlalchemy_database(db_url: str, *config) -> Database:
         username = Column(String(100), nullable=False, index=True)
         password = Column(String(100), nullable=False)
 
+    class BlockedToken(Base):
+        __tablename__ = "blocked_tokens"
+
+        id = Column(Integer, primary_key=True)
+        jti = Column(String(36), nullable=False, index=True)
+
     class SQLAlchemyDatabase(Database):
         def __init__(self):
             self.db_url = db_url
@@ -69,5 +75,13 @@ def build_sqlalchemy_database(db_url: str, *config) -> Database:
         @from_orm(User)
         def find_user_by_username(self, username: str, session) -> UserORM | None:
             return session.get_first(select(UserORM).filter_by(username=username))
+
+        @sessionmaker.with_begin
+        def block_token(self, jti: str, session) -> None:
+            return BlockedToken.create(session, jti=jti)
+
+        @sessionmaker.with_begin
+        def is_token_blocked(self, jti: str, session) -> bool:
+            return session.get_first(select(BlockedToken).filter_by(jti=jti)) is not None
 
     return SQLAlchemyDatabase()

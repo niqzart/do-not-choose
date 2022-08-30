@@ -17,6 +17,7 @@ implementing a part of the [basic interface](SPEC.md). *A wave will be described
 ### W2 (Reglog)
 - User & UserSession data structures
 - Classic authorization services
+- Blocking user tokens for logout
 - One protected resource (`/home/`)
 
 ### W3 (CRUDLs)
