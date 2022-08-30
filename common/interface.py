@@ -19,17 +19,6 @@ class User(UserBase):
     password: str
 
 
-class UserSessionInput(BaseModel):
-    device: str
-
-    class Config:
-        orm_mode = True
-
-
-class UserSession(UserSessionInput):
-    id: int
-
-
 class Database:
     @staticmethod
     def generate_hash(password) -> str:
@@ -52,21 +41,6 @@ class Database:
         raise NotImplementedError()
 
     def find_user_by_username(self, user_id: int) -> User | None:
-        raise NotImplementedError()
-
-    def create_user_session(self, user: User, user_session: UserSessionInput) -> UserSession:
-        raise NotImplementedError()
-
-    def find_user_session(self, session_id: int) -> UserSession | None:
-        raise NotImplementedError()
-
-    def delete_user_session(self, session_id: int) -> None:
-        raise NotImplementedError()
-
-    def list_user_sessions(self, user: User) -> list[UserSession]:
-        raise NotImplementedError()
-
-    def find_user_by_session_id(self, session_id: int) -> User | None:
         raise NotImplementedError()
 
 

@@ -18,7 +18,6 @@ implementing a part of the [basic interface](SPEC.md). *A wave will be described
 - User & UserSession data structures
 - Classic authorization services
 - One protected resource (`/home/`)
-- User session management
 
 ### W3 (CRUDLs)
 TBD
