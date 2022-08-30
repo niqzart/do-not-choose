@@ -68,16 +68,16 @@ def build_sqlalchemy_database(db_url: str, *config) -> Database:
     class SQLAlchemyDatabase(Database):
         @sessionmaker.with_begin
         @from_orm(User)
-        def _create_user(self, session, username: str, password: str) -> User:
+        def _create_user(self, username: str, password: str, session) -> User:
             return UserORM.create(session, username=username, password=password)
 
         @sessionmaker.with_begin
         @from_orm(User)
-        def find_user(self, session, user_id: int) -> UserORM | None:
+        def find_user(self, user_id: int, session) -> UserORM | None:
             return session.get_first(select(UserORM).filter_by(id=user_id))
 
         @sessionmaker.with_begin
-        def check_password(self, session, user_id: int, password: str) -> bool | None:
+        def check_password(self, user_id: int, password: str, session) -> bool | None:
             user: UserORM = session.get_first(select(UserORM).filter_by(id=user_id))
             if user is None:
                 return None
@@ -85,27 +85,27 @@ def build_sqlalchemy_database(db_url: str, *config) -> Database:
 
         @sessionmaker.with_begin
         @from_orm(UserSession)
-        def create_user_session(self, session, user: User, user_session: UserSessionInput) -> UserSessionORM:
+        def create_user_session(self, user: User, user_session: UserSessionInput, session) -> UserSessionORM:
             return UserSessionORM.create(session, **user_session.dict())
 
         @sessionmaker.with_begin
         @from_orm(UserSession)
-        def find_user_session(self, session, session_id: int) -> UserSessionORM | None:
+        def find_user_session(self, session_id: int, session) -> UserSessionORM | None:
             return UserSessionORM.find_by_id(session, session_id)
 
         @sessionmaker.with_begin
-        def delete_user_session(self, session, session_id: int) -> None:
+        def delete_user_session(self, session_id: int, session) -> None:
             user_session = UserSessionORM.find_by_id(session, session_id)
             user_session.delete(session)
 
         @sessionmaker.with_begin
         @list_from_orm(UserSession)
-        def list_user_sessions(self, session, user: User) -> list[UserSession]:
+        def list_user_sessions(self, user: User, session) -> list[UserSession]:
             return session.get_all(select(UserSessionORM).filter_by(user_id=user.id))
 
         @sessionmaker.with_begin
         @from_orm(User)
-        def find_user_by_session_id(self, session, session_id: int) -> User | None:
+        def find_user_by_session_id(self, session_id: int, session) -> User | None:
             user_session = UserSessionORM.find_by_id(session, session_id)
             return None if user_session is None else user_session.user
 
