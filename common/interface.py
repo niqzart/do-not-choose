@@ -47,6 +47,9 @@ class Database:
     def find_user(self, user_id: int) -> User | None:
         raise NotImplementedError()
 
+    def find_user_by_username(self, user_id: int) -> User | None:
+        raise NotImplementedError()
+
     def check_password(self, user_id: int, password: str) -> bool | None:
         raise NotImplementedError()
 

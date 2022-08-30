@@ -77,6 +77,11 @@ def build_sqlalchemy_database(db_url: str, *config) -> Database:
             return session.get_first(select(UserORM).filter_by(id=user_id))
 
         @sessionmaker.with_begin
+        @from_orm(User)
+        def find_user_by_username(self, username: str, session) -> UserORM | None:
+            return session.get_first(select(UserORM).filter_by(username=username))
+
+        @sessionmaker.with_begin
         def check_password(self, user_id: int, password: str, session) -> bool | None:
             user: UserORM = session.get_first(select(UserORM).filter_by(id=user_id))
             if user is None:
