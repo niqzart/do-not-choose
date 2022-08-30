@@ -1,9 +1,8 @@
 from os import getenv
 from sys import modules
-from traceback import format_tb
 
-from flask import request, Response, Flask
-from werkzeug.exceptions import NotFound
+from flask import Response, Flask
+from werkzeug.exceptions import NotFound, InternalServerError
 
 app: Flask = Flask(__name__)
 app.config["TESTING"] = "pytest" in modules
@@ -17,16 +16,9 @@ def on_not_found(_):
     return {"message": "Not Found"}, 404
 
 
-@app.errorhandler(Exception)
-def on_any_exception(error: Exception):
-    error_text: str = (
-        f"Requested URL: {request.path}\n"
-        + "".join(format_tb(error.__traceback__))
-        + f"Error: {repr(error)}"
-    )
-    print(error_text)
-    message: str = error_text if app.debug else "Error occurred, check the logs"
-    return {"message": message}, 500
+@app.errorhandler(InternalServerError)
+def on_any_exception(_: InternalServerError):
+    return {"message": "Error occurred, check the logs"}, 500
 
 
 @app.after_request
