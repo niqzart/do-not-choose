@@ -38,6 +38,9 @@ class Database:
     def verify_hash(password, hashed) -> bool:
         return pbkdf2_sha256.verify(password, hashed)
 
+    def init_debug(self):
+        pass
+
     def _create_user(self, username: str, password: str) -> User:
         raise NotImplementedError()
 

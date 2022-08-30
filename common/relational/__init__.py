@@ -66,6 +66,14 @@ def build_sqlalchemy_database(db_url: str, *config) -> Database:
             return session.get_first(select(UserSessionORM).filter_by(id=session_id))
 
     class SQLAlchemyDatabase(Database):
+        def __init__(self):
+            self.db_url = db_url
+            self.meta = db_meta
+            self.Base = Base
+
+        def init_debug(self):
+            self.meta.create_all()
+
         @sessionmaker.with_begin
         @from_orm(User)
         def _create_user(self, username: str, password: str, session) -> User:
