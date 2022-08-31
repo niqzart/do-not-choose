@@ -5,8 +5,11 @@ from wsgiref.simple_server import make_server
 from falcon import App
 
 from simple import SimpleResource
+from utils import XHeaderMiddleware
 
-app = App()
+app = App(middleware=[
+    XHeaderMiddleware()
+])
 
 app.add_route("/simple/", SimpleResource())
 

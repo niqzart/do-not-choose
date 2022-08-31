@@ -72,7 +72,7 @@ TBD
 |    F     | w1f [30 Aug 2022] | w2f [30 Aug 2020] |       |       |
 |    R     |                   |                   |       |       |
 |    X     | w1x [25 Aug 2022] |                   |       |       |
-|    B     |                   |                   |       |       |
+|    B     | w1b [31 Aug 2022] |                   |       |       |
 |    P     |                   |                   |       |       |
 
 ## Server Setup
