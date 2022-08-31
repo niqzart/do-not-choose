@@ -1,9 +1,18 @@
 from __future__ import annotations
 
+from enum import Enum
 from functools import wraps
 from typing import Type, Callable
 
 from pydantic import BaseModel
+
+
+class NamedIntEnum(int, Enum):
+    value: int
+
+    @property
+    def label(self) -> str:
+        return self.name.lower().replace("_", "-")
 
 
 def from_orm(model: Type[BaseModel]):
