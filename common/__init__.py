@@ -7,6 +7,7 @@ from .relational import build_sqlalchemy_database
 
 load_dotenv(".env")
 
+db: Database
 db_choice = getenv("DB_CHOICE", "relational")
 
 if db_choice == "relational":

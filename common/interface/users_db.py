@@ -1,8 +1,5 @@
 from __future__ import annotations
 
-from functools import wraps
-from typing import Type, Callable
-
 from passlib.hash import pbkdf2_sha256
 from pydantic import BaseModel, constr
 
@@ -19,7 +16,7 @@ class User(UserBase):
     password: str
 
 
-class Database:
+class UserDatabase:
     @staticmethod
     def generate_hash(password) -> str:
         return pbkdf2_sha256.hash(password)
@@ -27,9 +24,6 @@ class Database:
     @staticmethod
     def verify_hash(password, hashed) -> bool:
         return pbkdf2_sha256.verify(password, hashed)
-
-    def init_debug(self):
-        pass
 
     def _create_user(self, username: str, password: str) -> User:
         raise NotImplementedError()
@@ -48,29 +42,3 @@ class Database:
 
     def is_token_blocked(self, jti: str) -> bool:
         raise NotImplementedError()
-
-
-def from_orm(model: Type[BaseModel]):
-    def from_orm_wrapper(function) -> Callable[..., model | None]:
-        @wraps(function)
-        def from_orm_inner(*args, **kwargs):
-            result = function(*args, **kwargs)
-            if result is None:
-                return None
-            return model.from_orm(result)
-
-        return from_orm_inner
-
-    return from_orm_wrapper
-
-
-def list_from_orm(model: Type[BaseModel]):
-    def list_from_orm_wrapper(function) -> Callable[..., list[model]]:
-        @wraps(function)
-        def list_from_orm_inner(*args, **kwargs):
-            return [model.from_orm(res)
-                    for res in function(*args, **kwargs)]
-
-        return list_from_orm_inner
-
-    return list_from_orm_wrapper
