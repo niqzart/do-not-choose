@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from enum import Enum
 from functools import wraps
-from typing import Type, Callable
+from typing import Type, Callable, TypeVar
 
-from pydantic import BaseModel
+from pydantic import BaseModel, create_model
 
 
 class NamedIntEnum(int, Enum):
@@ -13,6 +13,19 @@ class NamedIntEnum(int, Enum):
     @property
     def label(self) -> str:
         return self.name.lower().replace("_", "-")
+
+
+t = TypeVar("t", bound=BaseModel)
+
+
+def patch_model(baseclass: type[t]) -> type[t]:
+    # noinspection PyTypeChecker
+    return create_model(
+        f"{baseclass.__name__}Patch",
+        **{key: (item.type_, None) for key, item in baseclass.__fields__.items()},
+        __config__=baseclass.__config__,
+        __validators__=baseclass.__validators__,
+    )
 
 
 def from_orm(model: Type[BaseModel]):
