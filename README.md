@@ -5,8 +5,7 @@
 This is a learning project made to better understand python web frameworks and complex server setups. There will be multiple implementations of the [basic interface](#waves), with using different [database systems](#databases), as well different [framework](#frameworks) (python or maybe other in the future). These implementations will be united using a complex [server setup](#server-setup).
 
 ## Waves
-Each implementation will be done in waves and tagged along the way for easier navigation. Each wave requires
-implementing a part of the [basic interface](SPEC.md). *A wave will be described in full after any full (database + framework) implementation reaches the previous wave*
+Each implementation will be done in waves and tagged along the way for easier navigation. Each wave requires implementing a part of the [basic interface](SPEC.md). *A wave will be described in full after any full (database + framework) implementation reaches the previous wave*
 
 ### W1 (Base)
 - Basic Configuration
@@ -15,13 +14,16 @@ implementing a part of the [basic interface](SPEC.md). *A wave will be described
 - Error handlers (404, 500)
 
 ### W2 (Reglog)
-- User & UserSession data structures
+- User & block-list data structures
 - Classic authorization services
+- Blocking user tokens for sign-out
 - One protected resource (`/home/`)
-- User session management
 
 ### W3 (CRUDLs)
-TBD
+- Games & Participant tables (+cascades)
+- Pagination with filters & sorts
+- Participant listing for participants
+- Updating & deleting for owners only
 
 ### W4 (Going Duplex)
 TBD
@@ -67,7 +69,7 @@ TBD
 |    A     | w1a [26 Aug 2022] | w2a [30 Aug 2022] |       |       |
 |    M     |                   |                   |       |       |
 |    E     |                   |                   |       |       |
-|    F     | w1f [30 Aug 2022] |                   |       |       |
+|    F     | w1f [30 Aug 2022] | w2f [30 Aug 2020] |       |       |
 |    R     |                   |                   |       |       |
 |    X     | w1x [25 Aug 2022] |                   |       |       |
 |    B     |                   |                   |       |       |

@@ -16,17 +16,7 @@ class UserBase(BaseModel):
 
 class User(UserBase):
     id: int
-
-
-class UserSessionInput(BaseModel):
-    device: str
-
-    class Config:
-        orm_mode = True
-
-
-class UserSession(UserSessionInput):
-    id: int
+    password: str
 
 
 class Database:
@@ -38,6 +28,9 @@ class Database:
     def verify_hash(password, hashed) -> bool:
         return pbkdf2_sha256.verify(password, hashed)
 
+    def init_debug(self):
+        pass
+
     def _create_user(self, username: str, password: str) -> User:
         raise NotImplementedError()
 
@@ -47,22 +40,13 @@ class Database:
     def find_user(self, user_id: int) -> User | None:
         raise NotImplementedError()
 
-    def check_password(self, user_id: int, password: str) -> bool | None:
+    def find_user_by_username(self, user_id: int) -> User | None:
         raise NotImplementedError()
 
-    def create_user_session(self, user: User, user_session: UserSessionInput) -> UserSession:
+    def block_token(self, jti: str) -> None:
         raise NotImplementedError()
 
-    def find_user_session(self, session_id: int) -> UserSession | None:
-        raise NotImplementedError()
-
-    def delete_user_session(self, session_id: int) -> None:
-        raise NotImplementedError()
-
-    def list_user_sessions(self, user: User) -> list[UserSession]:
-        raise NotImplementedError()
-
-    def find_user_by_session_id(self, session_id: int) -> User | None:
+    def is_token_blocked(self, jti: str) -> bool:
         raise NotImplementedError()
 
 

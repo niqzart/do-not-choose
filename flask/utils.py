@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from functools import wraps
 
-from flask import request
+from flask import request, Response, jsonify
 
 
 def parse_arguments(*keys: str) -> dict[str, str | None]:
@@ -13,13 +13,32 @@ def parse_arguments(*keys: str) -> dict[str, str | None]:
     }
 
 
-def argument_parser(*keys: str):
+def argument_parser(*keys: str, require_all: bool = False, strings_only: bool = False):
     def argument_parser_wrapper(function):
         @wraps(function)
         def argument_parser_inner(*args, **kwargs):
-            kwargs.update(parse_arguments(*keys))
+            result: dict[str, ...] = parse_arguments(*keys)
+
+            if require_all:
+                for key, value in result.items():
+                    if value is None:
+                        return {"message": f"Missing required argument: {key}"}, 400
+
+            if strings_only:
+                result = {
+                    key: value if value is None else str(value)
+                    for key, value in result.items()
+                }
+
+            kwargs.update(result)
             return function(*args, **kwargs)
 
         return argument_parser_inner
 
     return argument_parser_wrapper
+
+
+def error_response(code: int, *args, **kwargs) -> Response:
+    response = jsonify(*args, **kwargs)
+    response.status_code = code
+    return response
